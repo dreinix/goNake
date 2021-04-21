@@ -13,23 +13,36 @@ const config = {
             gravity:{y:0},
             debug:false
         }
-    }
+    },
+    scale:{
+        autoCenter: 1
+    },
+    parent: "game"
 }
 var game = new Phaser.Game(config)
+
 function preload () {
+    
+    //this.game.scale.autoCenter = 1;
     this.load.image('snake',"/assets/images/snake.png");
     this.load.image('gapple',"/assets/images/apple.png");
     this.load.image('rapple',"/assets/images/redApple.png");
     this.load.image('vWall',"/assets/images/wall.png");
-    this.load.image('neck',"/assets/images/snake.png");
+    this.load.image('neck',"/assets/images/snake.png"); 
+    this.load.image('background',"/assets/images/background.jpg"); 
+    //this.game.canvas={ margin : 800}
+    //game.stage.scale.pageAlignVeritcally = true;
 }
 var apples = 0
 var tail = [];
+
 function create () {
+    
     //default world elements
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#ffff' });
     cursors = this.input.keyboard.createCursorKeys();
     this.group = this.physics.add.group();
+    this.game.scale.refresh()
     // Snake creation
     snake = this.physics.add.sprite(400, 300, 'snake');
     snake.setBounce(0.2);
@@ -54,6 +67,7 @@ function gameOver (){
     console.log("GAME OVER MA NIGGA")
     
 }
+
 function collectGreenApple (snake, apple)
 {   //
     //Apple reaction
@@ -117,11 +131,10 @@ function collectRedApple (rapple)
 
 }
 
-
 function update(){
-
+    
     speed = 400;
-
+    
     if (cursors.left.isDown & snake.body.velocity.x!=speed) {
         snake.body.setVelocityY(0);
         snake.body.setVelocityX(-speed);
@@ -139,24 +152,7 @@ function update(){
         Phaser.Actions.ShiftPosition(this.neck.getChildren(), snake.x, snake.y,0);
     }
     if(tail.length>0){
-        spawnOffsetX = 0
-        spawnOffsetY=0;
-        var amount = 12
-        if (snake.body.velocity.x > 0) {
-            spawnOffsetX = amount
-        }
-        if (snake.body.velocity.x < 0) {
-            spawnOffsetX = -amount
-        }
-        if (snake.body.velocity.Y > 0) {
-            spawnOffsetY = amount
-        }
-        if (snake.body.velocity.y < 0) {
-            spawnOffsetY = -amount
-        }
-        //console.log(spawnOffsetX+"////"+spawnOffsetY)
         Phaser.Actions.ShiftPosition(tail, this.neck.getChildren()[0].x, this.neck.getChildren()[0].y,0);
     }
 }
 
- 
