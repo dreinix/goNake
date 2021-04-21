@@ -6,6 +6,7 @@ const config = {
         preload:preload,
         create:create,
         update:update,
+        menu:menu
     },
     physics:{
         default: 'arcade',
@@ -30,23 +31,27 @@ function preload () {
     this.load.image('vWall',"/assets/images/wall.png");
     this.load.image('neck',"/assets/images/snake.png"); 
     this.load.image('background',"/assets/images/background.jpg"); 
+    this.load.image('play',"/assets/images/play.png"); 
     //this.game.canvas={ margin : 800}
     //game.stage.scale.pageAlignVeritcally = true;
 }
 var apples = 0
 var tail = [];
-
+var dead = false;
+var speed = 200;
 function create () {
     
     //default world elements
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#ffff' });
     cursors = this.input.keyboard.createCursorKeys();
     this.group = this.physics.add.group();
-    this.game.scale.refresh()
+    this.neck = this.physics.add.group();
+    //this.game.scale.refresh()
     // Snake creation
     snake = this.physics.add.sprite(400, 300, 'snake');
     //snake.setBounce(0.2);
     snake.setCollideWorldBounds(true);
+    snake.setBounce(0.2)
     snake.setScale(1.2)
 
     snake.checkWorldBounds = true;
@@ -58,17 +63,19 @@ function create () {
     Gapple = this.physics.add.sprite(Phaser.Math.Between(0, this.game.canvas.width+1),Phaser.Math.Between(0, this.game.canvas.height+1),'gapple')     
 
     //Interactions
-    this.physics.add.overlap(snake, this.group,gameOver, null, this);
+    console.log(this.physics.add)
+    //this.physics.arcade.factory
+    this.physics.add.collider(snake, this.group.getChildren(),die, null, this);
     this.physics.add.overlap(snake, Gapple, collectGreenApple, null, this);
-    this.physics.add.overlap(snake, Rapple, collectRedApple, null, this);  
-    this.physics.add.collider(snake,this.physics.world,gameOver,null,this);
+    this.physics.add.overlap(snake, Rapple, collectRedApple, null, this); 
 }
 
 function gameOver (game){
-    console.log("GAME OVER MA NIGGA")
     game.scene.pause();
 }
-
+function die(){
+    dead = true
+}
 function collectGreenApple (snake, apple)
 {   //
     //Apple reaction
@@ -83,39 +90,15 @@ function collectGreenApple (snake, apple)
     //
     //Tail efect
     //
-    //Spawn behind
-    var spawnOffsetX = 0;
-    var spawnOffsetY = 0;
-    var amount = 20
-    if (snake.body.velocity.x > 0) {
-      spawnOffsetX = amount
-    }
-    if (snake.body.velocity.x < 0) {
-      spawnOffsetX = -amount
-    }
-    if (snake.body.velocity.Y > 0) {
-      spawnOffsetY = amount
-    }
-    if (snake.body.velocity.y < 0) {
-      spawnOffsetY = -amount
-    }
     tail = this.group.getChildren();
-    if(this.group.getChildren().length>0){
+    if(this.neck.getChildren().length>(snake.width/speed)*100){ 
         this.group.create(
-            tail[tail.length-1].x + spawnOffsetX, 
-                tail[tail.length-1].y + spawnOffsetY, 'snake');
-    }else if(this.neck){           
-        this.neck.create(
-            this.neck.getChildren()[this.neck.getChildren().length-1].x + spawnOffsetX, 
-                this.neck.getChildren()[this.neck.getChildren().length-1].y + spawnOffsetY, 'snake');
-        if(this.neck.getChildren().length>4){
-            this.group.create(
-                this.neck.getChildren()[this.neck.getChildren().length-1].x + spawnOffsetX, 
-                    this.neck.getChildren()[this.neck.getChildren().length-1].y + spawnOffsetY, 'snake');
-        }
-    }else{
-        this.neck = this.physics.add.group();
-        this.neck.create(snake.x + spawnOffsetX, snake.y + spawnOffsetY, 'neck');
+            this.neck.getChildren()[this.neck.getChildren().length-1].x, 
+                this.neck.getChildren()[this.neck.getChildren().length-1].y, 'neck');                        
+    }
+    else{
+        
+        this.neck.create(snake.x, snake.y, 'neck');
     }
 }
 
@@ -132,9 +115,7 @@ function collectRedApple (snake,rapple)
 
 }
 
-function update(){
-    
-    speed = 400;
+function update(){  
     
     if (cursors.left.isDown & snake.body.velocity.x!=speed) {
         snake.body.setVelocityY(0);
@@ -148,15 +129,22 @@ function update(){
     } else if(cursors.down.isDown & snake.body.velocity.y!=-speed){
         snake.body.setVelocityX(0);
         snake.body.setVelocityY(speed);
-    }  
-    if(this.neck){
-        Phaser.Actions.ShiftPosition(this.neck.getChildren(), snake.x, snake.y,0);
+    }
+    if(this.neck.getChildren().length>0){      
+        Phaser.Actions.ShiftPosition(this.neck.getChildren(), snake.x, snake.y,1);
     }
     if(tail.length>0){
-        Phaser.Actions.ShiftPosition(tail, this.neck.getChildren()[0].x, this.neck.getChildren()[0].y,0);
+
+        Phaser.Actions.ShiftPosition(tail, this.neck.getChildren()[this.neck.getChildren().length-1].x, this.neck.getChildren()[this.neck.getChildren().length-1].y);
     }
     if(this.game.canvas.width-9==snake.x || snake.x ==9 || this.game.canvas.height-9==snake.y|| snake.y ==9 ){
+        dead = true
+    }
+    if(dead){
         gameOver(this);
     }
 }
 
+function menu(){
+    this.add.sprite(this.game.canvas.width/2,this.game.canvas.height/2,'play') 
+}
