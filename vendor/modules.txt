@@ -1,2 +1,0 @@
-# github.com/go-chi/chi v1.5.4
-## explicit
