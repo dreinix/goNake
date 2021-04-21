@@ -45,14 +45,14 @@ function create () {
     this.game.scale.refresh()
     // Snake creation
     snake = this.physics.add.sprite(400, 300, 'snake');
-    snake.setBounce(0.2);
+    //snake.setBounce(0.2);
     snake.setCollideWorldBounds(true);
     snake.setScale(1.2)
 
     snake.checkWorldBounds = true;
     
     //variable elements
-    var Rapple = this.add.sprite("250","300",'rapple') 
+    var Rapple = this.physics.add.sprite("250","300",'rapple') 
     Rapple.setScale(0.1,0.1)
 
     Gapple = this.physics.add.sprite(Phaser.Math.Between(0, this.game.canvas.width+1),Phaser.Math.Between(0, this.game.canvas.height+1),'gapple')     
@@ -61,11 +61,12 @@ function create () {
     this.physics.add.overlap(snake, this.group,gameOver, null, this);
     this.physics.add.overlap(snake, Gapple, collectGreenApple, null, this);
     this.physics.add.overlap(snake, Rapple, collectRedApple, null, this);  
+    this.physics.add.collider(snake,this.physics.world,gameOver,null,this);
 }
 
-function gameOver (){
+function gameOver (game){
     console.log("GAME OVER MA NIGGA")
-    
+    game.scene.pause();
 }
 
 function collectGreenApple (snake, apple)
@@ -118,7 +119,7 @@ function collectGreenApple (snake, apple)
     }
 }
 
-function collectRedApple (rapple)
+function collectRedApple (snake,rapple)
 {   
     rapple.disableBody(true, true);
     var Rapple = this.add.sprite(Phaser.Math.Between(0, this.game.canvas.width+1),Phaser.Math.Between(0, this.game.canvas.height+1),'rapple') 
@@ -138,7 +139,7 @@ function update(){
     if (cursors.left.isDown & snake.body.velocity.x!=speed) {
         snake.body.setVelocityY(0);
         snake.body.setVelocityX(-speed);
-    } else if (cursors.right.isDown & snake.body.velocity.x!=speed) {
+    } else if (cursors.right.isDown & snake.body.velocity.x!=-speed) {
         snake.body.setVelocityY(0);
         snake.body.setVelocityX(speed);
     } else if (cursors.up.isDown & snake.body.velocity.y!=speed) {
@@ -153,6 +154,9 @@ function update(){
     }
     if(tail.length>0){
         Phaser.Actions.ShiftPosition(tail, this.neck.getChildren()[0].x, this.neck.getChildren()[0].y,0);
+    }
+    if(this.game.canvas.width-9==snake.x || snake.x ==9 || this.game.canvas.height-9==snake.y|| snake.y ==9 ){
+        gameOver(this);
     }
 }
 
