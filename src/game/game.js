@@ -7,14 +7,14 @@ export class Game extends Phaser.Scene{
     preload () {
     
         //this.game.scale.autoCenter = 1;
-        this.load.image('snake',"./src/assets/images/snake.png");
-        this.load.image('gapple',"./src/assets/images/apple.png");
-        this.load.image('rapple',"./src/assets/images/redApple.png");
-        this.load.image('vWall',"./src/assets/images/wall.png");
-        this.load.image('neck',"./src/assets/images/snake.png"); 
-        this.load.image('background',"./src/assets/images/background.jpg"); 
-        this.load.image('play',"./src/assets/images/playLogo.png");
-        this.load.image('background',"./src/assets/images/background.jpg"); 
+        this.load.image('snake',"/src/assets/images/snake.png");
+        this.load.image('gapple',"/src/assets/images/apple.png");
+        this.load.image('rapple',"/src/assets/images/redApple.png");
+        this.load.image('vWall',"/src/assets/images/wall.png");
+        this.load.image('neck',"/src/assets/images/snake.png"); 
+        this.load.image('background',"/src/assets/images/background.jpg"); 
+        this.load.image('play',"/src/assets/images/playLogo.png");
+        this.load.image('background',"/src/assets/images/background.jpg"); 
     }
     
     create () {
