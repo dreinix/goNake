@@ -1,7 +1,11 @@
-import Vue from 'vue'
-import App from './App.vue'
+import { defineCustomElements as defineIonPhaser } from '@ion-phaser/core/loader';
+import Vue from 'vue';
+import App from './App.vue';
+ 
+Vue.config.productionTip = false;
+Vue.config.ignoredElements = [/ion-\w*/];
 
-Vue.config.productionTip = false
+defineIonPhaser(window);
 
 new Vue({
   render: h => h(App),
