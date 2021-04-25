@@ -1,14 +1,13 @@
-import {createRouter,createWebHistory } from "vue-router";
-
+import Router from "vue-router";
+import Vue from 'vue'
+import landing from "@/components/landingPage/landing.vue"
+Vue.use(Router)
 const routes = [
-  { path: "/", name: "Landing",component: "./components/HelloWorld.vue"},
+  { path: "/", name: "Landing",component:landing},
   //{ path: "/", component: "Landing" },
   //{ path: "/home", component: "Home", meta: { requiresAuth: true } },
 ];
 
-const router = createRouter({
-  history: createWebHistory("/"),
+export default new Router({
   routes
 })
-
-export default router
