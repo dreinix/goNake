@@ -5,12 +5,18 @@
     </div>
     <div id="content" >
       <div id="leaderboard">
-      <v-list>
+      <v-list subheader two-line dark
+        max>
         <v-list-item
-          v-for="(score, i) in scores"
-          :key="i">
+          v-for="(score, i) in scores":key="i">
+          
           <v-list-item-content>
-            <v-list-item-title v-text="score.value"></v-list-item-title>
+            <v-list-item-title>Top #{{i+1}}</v-list-item-title>
+            <v-list-item-title >Score: {{score.value}}</v-list-item-title>
+            <v-list-item-subtitle>
+              By: {{score.user.name}} -- At: {{formatDate(score.date)}}
+            </v-list-item-subtitle>
+              
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -18,7 +24,7 @@
 
       </div>     
         <div  id="game">
-          <h1>{{ msg }}</h1>
+          <h1>GoNake!!</h1>
           <ion-phaser
             v-bind:game.prop='game'
             v-bind:initialize.prop='initialize'
@@ -28,17 +34,7 @@
     </div>
   </div>  
 </template>
-
 <script>
-/*
-
-      <md-list v-for="score in scores" v-bind:key="score.ID">
-        <md-list-item>
-        <span class="md-list-item-text"> {{score.value}} - {{score.user.name}} : {{formatDate(score.date)}}</span>
-          
-        </md-list-item>
-      </md-list>
-*/
 import Phaser from "phaser";
 import {Game} from '@/game/game'
 import axios from 'axios'
@@ -89,13 +85,13 @@ export default {
       }
     },
     formatDate(date){
-      return moment(String(date)).format('MM/DD/YYYY HH:MM')
+      return moment(String(date)).add(4, 'hours').format('DD/MM/YYYY hh:mm a')
     }
   },
   mounted(){
     try {
       axios
-      .get(`http://127.0.0.1:3001/api/scores`)
+      .get(`http://127.0.0.1:3001/api/scores/top`)
       .then(response => (this.info = response, console.log(response.data),this.scores=response.data))
       return response;
     } catch (e) {
