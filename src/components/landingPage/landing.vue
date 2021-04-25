@@ -1,6 +1,6 @@
 <template>
   <div class="landing">
-    <div @click="getUser">
+    <div @click="">
         <a href="#1" class="btn">Initialize</a>
     </div>
     <div id="content" >
@@ -38,7 +38,7 @@
 import Phaser from "phaser";
 import {Game} from '@/game/game'
 import axios from 'axios'
-import testing from '@/utils/apiRequest'
+import auth from '@/utils/apiRequest'
 import moment from 'moment'
 export default {
   
@@ -74,16 +74,6 @@ export default {
     }
   },
   methods:{
-    getUser(){
-      try {
-        axios
-        .get('http://127.0.0.1:3001/api/users/652619946128146433')
-        .then(response => (this.info = response, console.log(response.data)))
-        return response;
-      } catch (e) {
-        return e;
-      }
-    },
     formatDate(date){
       return moment(String(date)).add(4, 'hours').format('DD/MM/YYYY hh:mm a')
     }
@@ -93,7 +83,11 @@ export default {
       axios
       .get(`http://127.0.0.1:3001/api/scores/top`)
       .then(response => (this.info = response, console.log(response.data),this.scores=response.data))
-      return response;
+      .catch(err=>{
+        if(!err.status){
+          return "Server down"
+        } 
+      })
     } catch (e) {
       return e;
     }

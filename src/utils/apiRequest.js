@@ -14,23 +14,12 @@ axios.interceptors.request.use(
   }
 );
 
-export const testing = async () => {
+export const auth = async () => {
   try {
     const request = axios.get(`${HOST}/`);
     const response = await request;
     return response;
   } catch (e) {
     return e;
-  }
-};
-
-export const getInvitationInfo = async (token) => {
-  try {
-    const response = await axios.get(
-      `${HOST}/api/v1/organizations/invitation/${token}`
-    );
-    return response;
-  } catch (e) {
-    return e.response.data;
   }
 };
