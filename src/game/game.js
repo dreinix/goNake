@@ -29,10 +29,7 @@ export class Game extends Phaser.Scene{
         this.snake = null
         this.rapple = null
         this.gapple = null
-        this.yes = null
-        this.no = null
-        this.tryagain = null
-        this.gameOverDisplay = null;
+
     }  
     create () {
         //default world elements
@@ -40,14 +37,6 @@ export class Game extends Phaser.Scene{
         this.cursors = this.input.keyboard.createCursorKeys();
         this.body = this.physics.add.group();
         this.neck = this.physics.add.group();
-        this.gameOverDisplay = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2 - 100,'gameover');
-        this.tryagain = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2,'tryagain').setScale(0.8);
-        this.yes= this.add.sprite(this.game.renderer.width/2-50,this.game.renderer.height/2 + 50,'yes').setScale(2);
-        this.no = this.add.sprite(this.game.renderer.width/2+50,this.game.renderer.height/2+50,'no').setScale(2);
-        this.gameOverDisplay.setVisible(false);
-        this.yes.setVisible(false);
-        this.no.setVisible(false);
-        this.tryagain.setVisible(false);
         // Snake creation
         this.snake = this.physics.add.sprite(400, 300, 'snake');
         this.snake.setCollideWorldBounds(true);
@@ -108,20 +97,11 @@ function die(){
     dead = true
 }
 function gameOver (game){
-    game.gameOverDisplay = game.add.sprite(game.game.renderer.width/2,game.game.renderer.height/2 - 100,'gameover');
-    game.gameOverDisplay.setVisible(true);
-    game.tryagain.setVisible(true)
-    game.yes.setVisible(true)
-    game.no.setVisible(true)
-    game.yes.setInteractive();
-    game.no.setInteractive();
-    game.yes.on("pointerup",()=>{
-        game.scene.start(DIRECTORY.SCENES.GAME)
-    })
-    game.no.on("pointerup",()=>{
-        game.scene.start(DIRECTORY.SCENES.MENU) 
-    })
+    dead = false;
+    game.scene.pause()
+    game.scene.launch(DIRECTORY.SCENES.MENU,"died")
 }
+
 
 function collectRedApple (snake,rapple)
 {   
@@ -168,7 +148,7 @@ function collectRedApple (snake,rapple)
 
 }
 
-function collectGreenApple (snake, gapple)
+function collectGreenApple (snake)
 {   //
     //Apple reaction
     //
@@ -196,7 +176,7 @@ function collectGreenApple (snake, gapple)
     //
     let odd = Phaser.Math.Between(0,100)
     if(odd<=15){
-        rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
-        this.physics.add.overlap(snake, rapple, collectRedApple, null, this);
+        this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
+        this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }
 }
