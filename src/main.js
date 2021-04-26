@@ -10,7 +10,8 @@ import vuetify from '@/plugins/vuetify'
 defineIonPhaser(window);
 
 new Vue({
+  el: '#app',
   vuetify,
   router,
   render: h => h(App),
-}).$mount('#app')
+})
