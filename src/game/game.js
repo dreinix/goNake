@@ -1,68 +1,85 @@
-var apples = 0, tail = [], dead = false, speed = 200,scoreText,cursors,Rapple,Gapple,snake,odd;
-import snakeimg from '../assets/images/snake.png'
+var dead = false
+import {DIRECTORY} from './directory.js'
+/*import snakeimg from '../assets/images/snake.png'
 import gappleimg from '../assets/images/apple.png'
 import rapple from "../assets/images/redApple.png"
 import vWall from "../assets/images/wall.png"
 import playImg from "../assets/images/playLogo.png"
-import background from "../assets/images/background.jpg"
-
+import background from "../assets/images/background.jpg"*/
 export class Game extends Phaser.Scene{
     constructor(){
-        super({key:'game'});
-        
+        super({
+            key: DIRECTORY.SCENES.GAME
+        })
+        this.speed = 200;
+        this.tail = [];
+        this.apples = 0;
+        this.scoreText = ""
+        this.cursors = null
+        this.snake = null
+        this.rapple = null
+        this.gapple = null
     }
-    preload () {
-        
-        //this.game.scale.autoCenter = 1;
-        this.textures.addBase64('snake', snakeimg);
-        this.textures.addBase64('gapple',gappleimg);
-        this.textures.addBase64('rapple',rapple);
-        this.textures.addBase64('vWall',vWall);
-        this.textures.addBase64('background',background); 
-        this.textures.addBase64('play',playImg);
-
-        this.load.image('snake','../assets/images/snake.png');        
-        
-    }
-    
+    init(){
+        this.speed = 200;
+        this.tail = [];
+        this.apples = 0;
+        this.scoreText = ""
+        this.cursors = null
+        this.snake = null
+        this.rapple = null
+        this.gapple = null
+        this.yes = null
+        this.no = null
+        this.tryagain = null
+        this.gameOverDisplay = null;
+    }  
     create () {
         //default world elements
-        scoreText = this.add.text(10, 10, 'score: 0', { fontSize: '32px', fill: '#ffff' });
-        cursors = this.input.keyboard.createCursorKeys();
+        this.scoreText = this.add.text(10, 10, 'score: 0', { fontSize: '32px', fill: '#ffff' });
+        this.cursors = this.input.keyboard.createCursorKeys();
         this.body = this.physics.add.group();
         this.neck = this.physics.add.group();
+        this.gameOverDisplay = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2 - 100,'gameover');
+        this.tryagain = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2,'tryagain').setScale(0.8);
+        this.yes= this.add.sprite(this.game.renderer.width/2-50,this.game.renderer.height/2 + 50,'yes').setScale(2);
+        this.no = this.add.sprite(this.game.renderer.width/2+50,this.game.renderer.height/2+50,'no').setScale(2);
+        this.gameOverDisplay.setVisible(false);
+        this.yes.setVisible(false);
+        this.no.setVisible(false);
+        this.tryagain.setVisible(false);
         // Snake creation
-        snake = this.physics.add.sprite(400, 300, 'snake');
-        snake.setCollideWorldBounds(true);
-        snake.setScale(1.2)
-    
-        snake.checkWorldBounds = true;
+        this.snake = this.physics.add.sprite(400, 300, 'snake');
+        this.snake.setCollideWorldBounds(true);
+        this.snake.setScale(1.2)
+        
+        this.snake.checkWorldBounds = true;
         
         //variable elements
-        Rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'rapple') 
-        Gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
+        this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'rapple') 
+        this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
     
         //Interactions
-        this.physics.add.collider(snake, this.body.getChildren(),die, null, this);
-        this.physics.add.overlap(snake, Gapple, collectGreenApple, null, this);
-        this.physics.add.overlap(snake, Rapple, collectRedApple, null, this);
+        this.physics.add.collider(this.snake, this.body.getChildren(),die, null, this);
+        this.physics.add.overlap(this.snake, this.gapple, collectGreenApple, null, this);
+        this.physics.add.overlap(this.snake, this.rapple, collectRedApple, null, this);
     }
     
     
     update(){  
         
-        if (cursors.left.isDown & snake.body.velocity.x!=speed) {
-            snake.body.setVelocityY(0);
-            snake.body.setVelocityX(-speed);
-        } else if (cursors.right.isDown & snake.body.velocity.x!=-speed) {
-            snake.body.setVelocityY(0);
-            snake.body.setVelocityX(speed);
-        } else if (cursors.up.isDown & snake.body.velocity.y!=speed) {
-            snake.body.setVelocityY(-speed);
-            snake.body.setVelocityX(0);
-        } else if(cursors.down.isDown & snake.body.velocity.y!=-speed){
-            snake.body.setVelocityX(0);
-            snake.body.setVelocityY(speed);
+        if (this.cursors.left.isDown & this.snake.body.velocity.x!=this.speed) {
+            this.snake.body.setVelocityY(0);
+            this.snake.body.setVelocityX(-this.speed);
+        } else if (this.cursors.right.isDown & this.snake.body.velocity.x!=-this.speed) {
+            this.snake.body.setVelocityY(0);
+            this.snake.body.setVelocityX(this.speed);
+        } else if (this.cursors.up.isDown & this.snake.body.velocity.y!=this.speed) {
+            this.snake.body.setVelocityY(-this.speed);
+            this.snake.body.setVelocityX(0);
+        } else if(this.cursors.down.isDown & this.snake.body.velocity.y!=-this.speed){
+            this.snake.body.setVelocityX(0);
+            this.snake.body.setVelocityY(this.speed);
         } /*
         else{
             console.log("x: "+snake.body.x)
@@ -72,38 +89,44 @@ export class Game extends Phaser.Scene{
         }*/
         //Create a "tail" efect
         if(this.neck.getChildren().length>0){      
-            Phaser.Actions.ShiftPosition(this.neck.getChildren(), snake.x, snake.y,1);
+            Phaser.Actions.ShiftPosition(this.neck.getChildren(), this.snake.x, this.snake.y,1);
         }
-        if(tail.length>0){
+        if(this.tail.length>0){
     
-            Phaser.Actions.ShiftPosition(tail, this.neck.getChildren()[this.neck.getChildren().length-1].x, this.neck.getChildren()[this.neck.getChildren().length-1].y);
+            Phaser.Actions.ShiftPosition(this.tail, this.neck.getChildren()[this.neck.getChildren().length-1].x, this.neck.getChildren()[this.neck.getChildren().length-1].y);
         }
         //borders
-        if(this.game.canvas.width-9==snake.x || snake.x ==9 || this.game.canvas.height-9==snake.y|| snake.y ==9 ){
+        if(this.game.canvas.width-9==this.snake.x || this.snake.x ==9 || this.game.canvas.height-9==this.snake.y|| this.snake.y ==9 ){
             dead = true
         }
         if(dead){
             gameOver(this);
         }
     }
-
-    menu(game){
-        var play = game.add.sprite(this.game.canvas.width/2,this.game.canvas.height/2,'play').setDepth(0);
-        play.setScale(0.5)
-    }
 }
 function die(){
     dead = true
 }
 function gameOver (game){
-    //menu(game);
-    game.scene.pause();
+    game.gameOverDisplay = game.add.sprite(game.game.renderer.width/2,game.game.renderer.height/2 - 100,'gameover');
+    game.gameOverDisplay.setVisible(true);
+    game.tryagain.setVisible(true)
+    game.yes.setVisible(true)
+    game.no.setVisible(true)
+    game.yes.setInteractive();
+    game.no.setInteractive();
+    game.yes.on("pointerup",()=>{
+        game.scene.start(DIRECTORY.SCENES.GAME)
+    })
+    game.no.on("pointerup",()=>{
+        game.scene.start(DIRECTORY.SCENES.MENU) 
+    })
 }
 
 function collectRedApple (snake,rapple)
 {   
     rapple.disableBody(true, true);
-    odd = Phaser.Math.Between(0,100)
+    let odd = Phaser.Math.Between(0,100)
     if(this.neck.getChildren().length<2){
         console.log("You died because you can't be smaller")
         die()
@@ -139,8 +162,8 @@ function collectRedApple (snake,rapple)
     // 15% chance to generate a redApple when eating
     //
     if(odd<=100){
-        Rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
-        this.physics.add.overlap(snake, Rapple, collectRedApple, null, this);
+        this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
+        this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }  
 
 }
@@ -150,17 +173,17 @@ function collectGreenApple (snake, gapple)
     //Apple reaction
     //
     //collectRedApple()
-     gapple.disableBody(true, true);
-    apples += 1;
-    scoreText.setText('apples: ' + apples);
+    this.gapple.disableBody(true, true);
+    this.apples += 1;
+    this.scoreText.setText('apples: ' + this.apples);
 
-    Gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width+1),Phaser.Math.Between(50, this.game.canvas.height+1),'gapple')     
-    this.physics.add.overlap(snake, Gapple, collectGreenApple, null, this);
+    this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width+1),Phaser.Math.Between(50, this.game.canvas.height+1),'gapple')     
+    this.physics.add.overlap(snake, this.gapple, collectGreenApple, null, this);
     //
     //Add tail elements
     //
-    tail = this.body.getChildren();
-    if(this.neck.getChildren().length>(snake.width/speed)*100){ 
+    this.tail = this.body.getChildren();
+    if(this.neck.getChildren().length>(snake.width/this.speed)*100){ 
         this.body.create(
             this.neck.getChildren()[this.neck.getChildren().length-1].x, 
                 this.neck.getChildren()[this.neck.getChildren().length-1].y, 'snake');                        
@@ -171,9 +194,9 @@ function collectGreenApple (snake, gapple)
     //
     // 15% chance to generate a redApple when eating
     //
-    odd = Phaser.Math.Between(0,100)
+    let odd = Phaser.Math.Between(0,100)
     if(odd<=15){
-        Rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
-        this.physics.add.overlap(snake, Rapple, collectRedApple, null, this);
+        rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
+        this.physics.add.overlap(snake, rapple, collectRedApple, null, this);
     }
 }
