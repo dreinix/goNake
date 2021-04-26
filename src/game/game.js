@@ -11,14 +11,6 @@ export class Game extends Phaser.Scene{
         super({
             key: DIRECTORY.SCENES.GAME
         })
-        this.speed = 200;
-        this.tail = [];
-        this.apples = 0;
-        this.scoreText = ""
-        this.cursors = null
-        this.snake = null
-        this.rapple = null
-        this.gapple = null
     }
     init(){
         this.speed = 200;
@@ -29,6 +21,7 @@ export class Game extends Phaser.Scene{
         this.snake = null
         this.rapple = null
         this.gapple = null
+        this.walls = false;
 
     }  
     create () {
@@ -47,11 +40,13 @@ export class Game extends Phaser.Scene{
         //variable elements
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'rapple') 
         this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
-    
+        
         //Interactions
         this.physics.add.collider(this.snake, this.body.getChildren(),die, null, this);
         this.physics.add.overlap(this.snake, this.gapple, collectGreenApple, null, this);
         this.physics.add.overlap(this.snake, this.rapple, collectRedApple, null, this);
+        this.physics.add.overlap(this.snake, this.walls, die, null, this);
+        this.physics.add.overlap(this.body, this.walls, die, null, this);
     }
     
     
@@ -69,19 +64,12 @@ export class Game extends Phaser.Scene{
         } else if(this.cursors.down.isDown & this.snake.body.velocity.y!=-this.speed){
             this.snake.body.setVelocityX(0);
             this.snake.body.setVelocityY(this.speed);
-        } /*
-        else{
-            console.log("x: "+snake.body.x)
-            console.log("y: "+snake.body.y)
-            snake.body.setVelocityX(0);
-            snake.body.setVelocityY(0);
-        }*/
+        }
         //Create a "tail" efect
         if(this.neck.getChildren().length>0){      
             Phaser.Actions.ShiftPosition(this.neck.getChildren(), this.snake.x, this.snake.y,1);
         }
         if(this.tail.length>0){
-    
             Phaser.Actions.ShiftPosition(this.tail, this.neck.getChildren()[this.neck.getChildren().length-1].x, this.neck.getChildren()[this.neck.getChildren().length-1].y);
         }
         //borders
@@ -101,7 +89,6 @@ function gameOver (game){
     game.scene.pause()
     game.scene.launch(DIRECTORY.SCENES.MENU,"died")
 }
-
 
 function collectRedApple (snake,rapple)
 {   
@@ -155,7 +142,7 @@ function collectGreenApple (snake)
     //collectRedApple()
     this.gapple.disableBody(true, true);
     this.apples += 1;
-    this.scoreText.setText('apples: ' + this.apples);
+    this.scoreText.setText('score: ' + this.apples);
 
     this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width+1),Phaser.Math.Between(50, this.game.canvas.height+1),'gapple')     
     this.physics.add.overlap(snake, this.gapple, collectGreenApple, null, this);
@@ -174,6 +161,15 @@ function collectGreenApple (snake)
     //
     // 15% chance to generate a redApple when eating
     //
+    let vodd = Phaser.Math.Between(0,100)
+    if(this.apples%10==0){
+        this.walls = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'vWall')
+        vodd<50? this.walls.rotation= 1.575: this.walls.rotation=0
+        this.physics.add.overlap(this.snake, this.walls, die, null, this);
+        this.physics.add.overlap(this.body, this.walls, die, null, this);
+        this.speed+=this.speed*0.1
+        console.log(this.walls)
+    }
     let odd = Phaser.Math.Between(0,100)
     if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
