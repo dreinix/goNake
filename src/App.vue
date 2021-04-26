@@ -1,18 +1,22 @@
 <template>
-  <div id="app" :style="image">
-    <landing msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app :style="image" :dark="true">
+    <navigation />
+    <v-main>
+      <router-view></router-view> 
+    </v-main>   
+  </v-app>
 </template>
-<div id="game"></div>
 <script>
 import Landing from '@/components/landingPage/landing.vue'
+import navigation from '@/components/navbar/navbar.vue'
 import "@/components/landingPage/landing.css";
 
 
 export default {
   name: 'app',
   components: {
-    Landing
+    Landing,
+    navigation
   },
   data(){
     return {
