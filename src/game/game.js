@@ -20,7 +20,6 @@ export class Game extends Phaser.Scene{
         this.textures.addBase64('vWall',vWall);
         this.textures.addBase64('background',background); 
         this.textures.addBase64('play',playImg);
-
         this.load.image('snake','../assets/images/snake.png');        
         
     }

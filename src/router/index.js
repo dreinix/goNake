@@ -1,14 +1,15 @@
 import Router from "vue-router";
 import Vue from 'vue'
-import landing from "@/components/landingPage/landing.vue"
-import register from "@/components/register/register.vue"
+import landingcomponent from "@/components/landingPage/landing.vue"
+import registercomponent from "@/components/register/register.vue"
+import logincomponent from "@/components/login/login.vue"
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: "/", name: "Landing",component:landing},
-    { path: "/signup",name:"signup", component: register },
-    //{ path: "/home", component: "Home", meta: { requiresAuth: true } },
+    { path: "/", name: "Landing",component:landingcomponent, meta: {reload: true}},
+    { path: "/signup",name:"signup", component: registercomponent },
+    { path: "/login", name:"login",component: "Login", component: logincomponent},
   ],
   mode: 'history'
 })
