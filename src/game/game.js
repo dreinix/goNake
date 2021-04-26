@@ -168,7 +168,6 @@ function collectGreenApple (snake)
         this.physics.add.overlap(this.snake, this.walls, die, null, this);
         this.physics.add.overlap(this.body, this.walls, die, null, this);
         this.speed+=this.speed*0.1
-        console.log(this.walls)
     }
     let odd = Phaser.Math.Between(0,100)
     if(odd<=15){
