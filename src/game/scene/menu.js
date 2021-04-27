@@ -11,15 +11,14 @@ export class Menu extends Phaser.Scene{
     }
     create(){
         //setup
-        this.gameOverDisplay = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2 - 100,'gameover');
-        this.tryagain = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2,'tryagain').setScale(0.8);
-        this.yes= this.add.sprite(this.game.renderer.width/2-50,this.game.renderer.height/2 + 50,'yes').setScale(2);
-        this.no = this.add.sprite(this.game.renderer.width/2+50,this.game.renderer.height/2+50,'no').setScale(2);
-        let play = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2 -150,'play').setDepth(0);
+        this.gameOverDisplay = this.add.image(this.game.renderer.width/2,this.game.renderer.height/2 - 100,'gameover');
+        this.tryagain = this.add.image(this.game.renderer.width/2,this.game.renderer.height/2,'tryagain').setScale(0.8);
+        this.yes= this.add.image(this.game.renderer.width/2-50,this.game.renderer.height/2 + 50,'yes').setScale(2).setDepth(2);
+        this.no = this.add.image(this.game.renderer.width/2+50,this.game.renderer.height/2+50,'no').setScale(2).setDepth(2);
+        let play = this.add.image(this.game.renderer.width/2,this.game.renderer.height/2 -50,'play').setDepth(0).setDepth(2);
         play.setScale(0.4)
-        let mp = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2 +100,'MP').setDepth(0);
+        let mp = this.add.image(this.game.renderer.width/2,this.game.renderer.height/2 +80,'MP').setDepth(0).setDepth(2);
         mp.setScale(0.07)
-
         //hiding
         //
         //try again menu
@@ -56,8 +55,8 @@ export class Menu extends Phaser.Scene{
             })
             this.no.on("pointerup",()=>{
                 this.died = false;
+                this.scene.stop(DIRECTORY.SCENES.GAME)
                 this.scene.start(DIRECTORY.SCENES.MENU,"giveup") 
-                
             })
         }
         

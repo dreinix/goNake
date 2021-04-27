@@ -83,6 +83,7 @@ function gameOver (game){
     //reset dead and launche try again menu
     dead = false;
     game.scene.pause()
+    game.scene.bringToTop(DIRECTORY.SCENES.MENU)
     game.scene.launch(DIRECTORY.SCENES.MENU,"died")
 }
 
@@ -141,8 +142,7 @@ function collectGreenApple (snake)
     this.gapple.disableBody(true, true);
     this.apples += 1;
     this.scoreText.setText('score: ' + this.apples);
-
-    this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width+1),Phaser.Math.Between(50, this.game.canvas.height+1),'gapple')     
+    this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'gapple')     
     this.physics.add.overlap(snake, this.gapple, collectGreenApple, null, this);
     //
     //Add tail elements
