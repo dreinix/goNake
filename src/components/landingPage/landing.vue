@@ -34,8 +34,8 @@ import {Game} from '@/game/game'
 import {Menu} from '@/game/scene/menu'
 import {Load} from '@/game/scene/load'
 import axios from 'axios'
-import auth from '@/utils/apiRequest'
 import moment from 'moment'
+
 export default {
   
   name: 'landing',
@@ -75,8 +75,7 @@ export default {
       return moment(String(date)).add(4, 'hours').format('DD/MM/YYYY hh:mm a')
     }
   },
-  mounted(){
-    
+  mounted(){  
     try {
       axios
       .get(`http://127.0.0.1:3001/api/scores/top`)
@@ -92,6 +91,4 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 
