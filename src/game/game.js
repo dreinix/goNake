@@ -10,7 +10,7 @@ export class Game extends Phaser.Scene{
     }
     init(){
         //set everything to 0
-        this.speed = 400;
+        this.speed = 250;
         this.tail = [];
         this.apples = 0;
         this.scoreText = ""
@@ -136,7 +136,7 @@ function collectRedApple (snake,rapple)
     //
     // 15% chance to generate a redApple when eating
     //
-    if(odd<=100){
+    if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
         this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }  
