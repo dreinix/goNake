@@ -3,7 +3,7 @@
     <div id="content" >
       <div id="leaderboard">
       <v-list subheader two-line dark
-        max>
+        dense max-width="80%">
         <v-list-item
           v-for="(score, i) in scores" :key="i">
           
@@ -17,11 +17,8 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-
-
       </div>     
-        <div  id="game">
-          <h1>GoNake!!</h1>
+        <div id="game">
           <ion-phaser
             v-bind:game.prop='game'
             v-bind:initialize.prop='initialize'
@@ -43,6 +40,7 @@ export default {
   
   name: 'landing',
   items: [],
+  reloaded: false,
   props: {
     msg: String,
   },
@@ -78,6 +76,7 @@ export default {
     }
   },
   mounted(){
+    
     try {
       axios
       .get(`http://127.0.0.1:3001/api/scores/top`)
