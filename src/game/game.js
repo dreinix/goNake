@@ -1,5 +1,7 @@
 var dead = false
+export var score = 0;
 import {DIRECTORY} from './directory.js'
+import axios from 'axios'
 export class Game extends Phaser.Scene{
     constructor(){
         super({
@@ -8,7 +10,7 @@ export class Game extends Phaser.Scene{
     }
     init(){
         //set everything to 0
-        this.speed = 200;
+        this.speed = 250;
         this.tail = [];
         this.apples = 0;
         this.scoreText = ""
@@ -37,7 +39,7 @@ export class Game extends Phaser.Scene{
         this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
         
         //Interactions
-        this.physics.add.collider(this.snake, this.body.getChildren(),die, null, this);
+        this.physics.add.overlap(this.snake, this.body.getChildren(),die, null, this);
         this.physics.add.overlap(this.snake, this.gapple, collectGreenApple, null, this);
         this.physics.add.overlap(this.snake, this.rapple, collectRedApple, null, this);
         this.physics.add.overlap(this.snake, this.walls, die, null, this);
@@ -82,6 +84,17 @@ function die(){
 function gameOver (game){
     //reset dead and launche try again menu
     dead = false;
+    try {
+        axios
+            .post(`http://127.0.0.1:3001/api/scores/`,{value:game.apples},{withCredentials: true})
+            .catch(err=>{
+                if(!err.status){
+                    console.log(err)
+                } 
+            })
+    } catch (error) {
+        console.log(error)
+    }
     game.scene.pause()
     game.scene.bringToTop(DIRECTORY.SCENES.MENU)
     game.scene.launch(DIRECTORY.SCENES.MENU,"died")
@@ -97,30 +110,26 @@ function collectRedApple (snake,rapple)
     if(this.neck.getChildren().length<2){
         die()
     }else{
-        if(this.body.getChildren().length>2){
+        if(this.body.getChildren().length>=2){
             for (let i =0; i<2 ; i++) {
                 let removed = this.body.getChildren()[this.body.getChildren().length-1];
-                removed.disableBody(true,true)
-                this.body.remove(this.body.getChildren().length-1);
+                removed.disableBody(true,true)      
+                this.body.remove(this.body.getChildren()[this.body.getChildren().length-1]);
+                         
             }
         }else if(this.body.getChildren().length>0){
-            let count = 0;
-            for (let i = 0; i<this.body.getChildren().length-1 ; i++) {
                 let removed = this.body.getChildren()[this.body.getChildren().length-1];
                 removed.disableBody(true,true)
-                this.body.remove(this.body.remove(this.body.getChildren().length-1));
-                count++;
-            }
-            if(count!=2){
-                let removed = this.neck.getChildren()[this.neck.getChildren().length-1];
+                this.body.remove(this.body.getChildren()[this.body.getChildren().length-1]);
+                
+                removed = this.neck.getChildren()[this.neck.getChildren().length-1];
                 removed.disableBody(true,true)
                 this.neck.remove(this.neck.getChildren()[this.neck.getChildren().length-1]);
-            }
         }else{
             for (let i = 0; i<2 ; i++) {
                 let removed = this.neck.getChildren()[this.neck.getChildren().length-1];
-                removed.disableBody(true,true)
-                this.neck.remove(this.neck.getChildren()[this.neck.getChildren().length-1]);
+                removed.disableBody(true,true)      
+                this.neck.remove(this.neck.getChildren()[this.neck.getChildren().length-1]);               
             }
         }
     }
@@ -148,6 +157,7 @@ function collectGreenApple (snake)
     //Add tail elements
     //
     this.tail = this.body.getChildren();
+    console.log((snake.width/this.speed)*100)
     if(this.neck.getChildren().length>(snake.width/this.speed)*100){ 
         this.body.create(
             this.neck.getChildren()[this.neck.getChildren().length-1].x, 

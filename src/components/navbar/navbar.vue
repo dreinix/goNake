@@ -15,19 +15,10 @@
                     </v-btn>
                 </template>
                 <v-list>
-                        <v-list-item v-for="(item, i) in items"
-                            :key="i" @click="goTo(item.title)">
-                                <v-list-item-title>{{ item.title }}</v-list-item-title>
-                        </v-list-item>
-
-
-                    <!-- <v-list-item @click="goTo('login')">
-                        <v-list-item-title>Login</v-list-item-title>
+                    <v-list-item v-for="(item, i) in items"
+                        :key="i" @click="goTo(item.title)">
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
                     </v-list-item>
-
-                    <v-list-item @click="goTo('signup')">
-                        <v-list-item-title>Singup</v-list-item-title>
-                    </v-list-item> -->
                 </v-list>
         </v-menu>
     </v-app-bar>
@@ -62,7 +53,7 @@ export default{
     
     mounted(){
         var cookie = getCookie("jwt")
-        if(cookie==""){
+        if(!cookie){
             this.items= [
                 { title: 'login' },
                 { title: 'signup' },]

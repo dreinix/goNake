@@ -99,11 +99,7 @@ export default{
             }
         },
         onLoadMeetup (id) {
-        this.$router.push('/login/')
       }
     },
-    mounted(){
-        console.log("page register")
-    }
 }
 </script>
