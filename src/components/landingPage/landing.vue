@@ -31,6 +31,8 @@
 <script>
 import Phaser from "phaser";
 import {Game} from '@/game/game'
+import {Menu} from '@/game/scene/menu'
+import {Load} from '@/game/scene/load'
 import axios from 'axios'
 import auth from '@/utils/apiRequest'
 import moment from 'moment'
@@ -50,7 +52,7 @@ export default {
         type: Phaser.AUTO,
         width: 800,
         height: 600,
-        scene: [Game],
+        scene: [Load,Menu,Game],
         physics:{
           default: 'arcade',
           arcade: {
