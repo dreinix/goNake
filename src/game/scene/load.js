@@ -16,10 +16,10 @@ export class Load extends Phaser.Scene{
             key: DIRECTORY.SCENES.LOAD
         })
     }
-    init(){
-        console.log("loading started");
-    }
     preload(){
+        //
+        // preload assets by parcing it as base64 from URI
+        //
         this.textures.addBase64('snake', snakeimg);
         this.textures.addBase64('gapple',gappleimg);
         this.textures.addBase64('rapple',rapple);
@@ -34,11 +34,17 @@ export class Load extends Phaser.Scene{
         this.load.image('snake','@/assets/images/snake.png');  
         this.load.image('gameover','@/assets/images/gameover.png');
         this.load.image('tryagain','@/assets/images/gameover.png');
+        //
+        //create a loadingbar
+        //
         let loadingBar =  this.add.graphics({
             fillStyle: {
                 color: 0xffffff
             }
         })
+        //
+        // Create a loading efect
+        //
         for (let index = 0; index < 100; index++) {
             this.load.image('snake'+index,'@/assets/images/snake.png');  
         }
@@ -48,7 +54,6 @@ export class Load extends Phaser.Scene{
         
     }
     create(){
-        //this.scenes.add()
         this.scene.start(DIRECTORY.SCENES.MENU,"loaded from load")
     }
 

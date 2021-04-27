@@ -1,11 +1,5 @@
 var dead = false
 import {DIRECTORY} from './directory.js'
-/*import snakeimg from '../assets/images/snake.png'
-import gappleimg from '../assets/images/apple.png'
-import rapple from "../assets/images/redApple.png"
-import vWall from "../assets/images/wall.png"
-import playImg from "../assets/images/playLogo.png"
-import background from "../assets/images/background.jpg"*/
 export class Game extends Phaser.Scene{
     constructor(){
         super({
@@ -13,6 +7,7 @@ export class Game extends Phaser.Scene{
         })
     }
     init(){
+        //set everything to 0
         this.speed = 200;
         this.tail = [];
         this.apples = 0;
@@ -51,7 +46,7 @@ export class Game extends Phaser.Scene{
     
     
     update(){  
-        
+        // handle direction change
         if (this.cursors.left.isDown & this.snake.body.velocity.x!=this.speed) {
             this.snake.body.setVelocityY(0);
             this.snake.body.setVelocityX(-this.speed);
@@ -85,6 +80,7 @@ function die(){
     dead = true
 }
 function gameOver (game){
+    //reset dead and launche try again menu
     dead = false;
     game.scene.pause()
     game.scene.launch(DIRECTORY.SCENES.MENU,"died")
@@ -94,8 +90,10 @@ function collectRedApple (snake,rapple)
 {   
     rapple.disableBody(true, true);
     let odd = Phaser.Math.Between(0,100)
+    //
+    // Reduce the tail/body size by 2 for every apple
+    //
     if(this.neck.getChildren().length<2){
-        console.log("You died because you can't be smaller")
         die()
     }else{
         if(this.body.getChildren().length>2){
@@ -128,7 +126,7 @@ function collectRedApple (snake,rapple)
     //
     // 15% chance to generate a redApple when eating
     //
-    if(odd<=100){
+    if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
         this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }  
@@ -159,7 +157,7 @@ function collectGreenApple (snake)
         this.neck.create(snake.x, snake.y, 'snake');
     }
     //
-    // 15% chance to generate a redApple when eating
+    // Every 10 points generate a wall in a random position
     //
     let vodd = Phaser.Math.Between(0,100)
     if(this.apples%10==0){
@@ -169,6 +167,9 @@ function collectGreenApple (snake)
         this.physics.add.overlap(this.body, this.walls, die, null, this);
         this.speed+=this.speed*0.1
     }
+    //
+    // 15% chance to generate a redApple when eating
+    //
     let odd = Phaser.Math.Between(0,100)
     if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 

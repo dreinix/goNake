@@ -1,14 +1,11 @@
 <template>
   <div class="landing">
-    <div @click="">
-        <a href="#1" class="btn">Initialize</a>
-    </div>
     <div id="content" >
       <div id="leaderboard">
       <v-list subheader two-line dark
         max>
         <v-list-item
-          v-for="(score, i) in scores":key="i">
+          v-for="(score, i) in scores" :key="i">
           
           <v-list-item-content>
             <v-list-item-title>Top #{{i+1}}</v-list-item-title>

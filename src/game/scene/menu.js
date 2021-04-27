@@ -9,10 +9,6 @@ export class Menu extends Phaser.Scene{
     init(data){
         data==="died"? this.died = true:this.died=false
     }
-    preload(){
-        
-        
-    }
     create(){
         //setup
         this.gameOverDisplay = this.add.sprite(this.game.renderer.width/2,this.game.renderer.height/2 - 100,'gameover');
@@ -25,10 +21,14 @@ export class Menu extends Phaser.Scene{
         mp.setScale(0.07)
 
         //hiding
+        //
+        //try again menu
         this.gameOverDisplay.visible = (false);
         this.yes.visible = (false);
         this.no.visible = (false);
         this.tryagain.visible = false;
+        //
+        //general menu
         play.visible = false;
         mp.visible = false;
         //actions
@@ -56,8 +56,6 @@ export class Menu extends Phaser.Scene{
             })
             this.no.on("pointerup",()=>{
                 this.died = false;
-                //this.scene.restart()
-                this.scene.stop(DIRECTORY.SCENES.GAME)
                 this.scene.start(DIRECTORY.SCENES.MENU,"giveup") 
                 
             })
