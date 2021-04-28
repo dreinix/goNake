@@ -33,7 +33,7 @@ export class Load extends Phaser.Scene{
         this.load.image('gameover','@/assets/images/gameover.png');
         this.load.image('tryagain','@/assets/images/gameover.png');
         //
-        //create a loadingbar
+        // create a loadingbar
         //
         let loadingBar =  this.add.graphics({
             fillStyle: {

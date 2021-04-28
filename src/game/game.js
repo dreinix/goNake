@@ -34,12 +34,12 @@ export class Game extends Phaser.Scene{
         
         this.snake.checkWorldBounds = true;
         
-        //variable elements
+        // variable elements
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'rapple') 
         this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
         this.gapple.setScale(0.3)
         this.rapple.setScale(0.3)
-        //Interactions
+        // Interactions
         this.physics.add.overlap(this.snake, this.body.getChildren(),die, null, this);
         this.physics.add.overlap(this.snake, this.gapple, collectGreenApple, null, this);
         this.physics.add.overlap(this.snake, this.rapple, collectRedApple, null, this);

@@ -10,7 +10,7 @@ export class Menu extends Phaser.Scene{
         data==="died"? this.died = true:this.died=false
     }
     create(){
-        //setup
+        // setup
         this.gameOverDisplay = this.add.image(this.game.renderer.width/2,this.game.renderer.height/2 - 100,'gameover');
         this.tryagain = this.add.image(this.game.renderer.width/2,this.game.renderer.height/2,'tryagain').setScale(0.8);
         this.yes= this.add.image(this.game.renderer.width/2-50,this.game.renderer.height/2 + 50,'yes').setScale(2).setDepth(2);
@@ -19,18 +19,18 @@ export class Menu extends Phaser.Scene{
         play.setScale(0.4)
         let mp = this.add.image(this.game.renderer.width/2,this.game.renderer.height/2 +80,'MP').setDepth(0).setDepth(2);
         mp.setScale(0.07)
-        //hiding
+        // hiding
         //
-        //try again menu
+        // try again menu hide
         this.gameOverDisplay.visible = (false);
         this.yes.visible = (false);
         this.no.visible = (false);
         this.tryagain.visible = false;
         //
-        //general menu
+        //general menu hide
         play.visible = false;
         mp.visible = false;
-        //actions
+        // actions
         if(!this.died){
             play.visible = true;
             mp.visible = true;
