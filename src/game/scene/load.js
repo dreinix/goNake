@@ -5,7 +5,6 @@ import rapple from "@/assets/images/redApple.png"
 import vWall from "@/assets/images/wall.png"
 import playImg from "@/assets/images/play_Logo.png"
 import MpImg from "@/assets/images/MP_option.png"
-import background from "@/assets/images/background.jpg"
 import gameover from '@/assets/images/gameover.png'
 import tryagain from '@/assets/images/try_again.png'
 import yes from '@/assets/images/yes.png'
@@ -24,7 +23,6 @@ export class Load extends Phaser.Scene{
         this.textures.addBase64('gapple',gappleimg);
         this.textures.addBase64('rapple',rapple);
         this.textures.addBase64('vWall',vWall);
-        this.textures.addBase64('background',background); 
         this.textures.addBase64('gameover',gameover); 
         this.textures.addBase64('play',playImg);
         this.textures.addBase64('MP',MpImg);
