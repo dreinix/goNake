@@ -9,7 +9,7 @@ export class Game extends Phaser.Scene{
         })
     }
     init(){
-        //set everything to 0
+        // set everything to 0
         this.speed = 250;
         this.tail = [];
         this.apples = 0;
@@ -22,7 +22,7 @@ export class Game extends Phaser.Scene{
 
     }  
     create () {
-        //default world elements
+        // default world elements
         this.scoreText = this.add.text(10, 10, 'score: 0', { fontSize: '32px', fill: '#ffff' });
         this.cursors = this.input.keyboard.createCursorKeys();
         this.body = this.physics.add.group();
@@ -37,7 +37,8 @@ export class Game extends Phaser.Scene{
         //variable elements
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'rapple') 
         this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
-        
+        this.gapple.setScale(0.3)
+        this.rapple.setScale(0.3)
         //Interactions
         this.physics.add.overlap(this.snake, this.body.getChildren(),die, null, this);
         this.physics.add.overlap(this.snake, this.gapple, collectGreenApple, null, this);
@@ -45,8 +46,7 @@ export class Game extends Phaser.Scene{
         this.physics.add.overlap(this.snake, this.walls, die, null, this);
         this.physics.add.overlap(this.body, this.walls, die, null, this);
     }
-    
-    
+     
     update(){  
         // handle direction change
         if (this.cursors.left.isDown & this.snake.body.velocity.x!=this.speed) {
@@ -62,14 +62,14 @@ export class Game extends Phaser.Scene{
             this.snake.body.setVelocityX(0);
             this.snake.body.setVelocityY(this.speed);
         }
-        //Create a "tail" efect
+        // Create a "tail" efect
         if(this.neck.getChildren().length>0){      
             Phaser.Actions.ShiftPosition(this.neck.getChildren(), this.snake.x, this.snake.y,1);
         }
         if(this.tail.length>0){
             Phaser.Actions.ShiftPosition(this.tail, this.neck.getChildren()[this.neck.getChildren().length-1].x, this.neck.getChildren()[this.neck.getChildren().length-1].y);
         }
-        //borders
+        // borders
         if(this.game.canvas.width-9==this.snake.x || this.snake.x ==9 || this.game.canvas.height-9==this.snake.y|| this.snake.y ==9 ){
             dead = true
         }
@@ -82,7 +82,7 @@ function die(){
     dead = true
 }
 function gameOver (game){
-    //reset dead and launche try again menu
+    // reset dead and launche try again menu
     dead = false;
     try {
         axios
@@ -138,6 +138,7 @@ function collectRedApple (snake,rapple)
     //
     if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
+        this.rapple.setScale(0.3)
         this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }  
 
@@ -151,7 +152,8 @@ function collectGreenApple (snake)
     this.gapple.disableBody(true, true);
     this.apples += 1;
     this.scoreText.setText('score: ' + this.apples);
-    this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'gapple')     
+    this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'gapple')  
+    this.gapple.setScale(0.3)   
     this.physics.add.overlap(snake, this.gapple, collectGreenApple, null, this);
     //
     //Add tail elements
@@ -185,6 +187,7 @@ function collectGreenApple (snake)
     let odd = Phaser.Math.Between(0,100)
     if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
+        this.rapple.setScale(0.3)
         this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }
 }
