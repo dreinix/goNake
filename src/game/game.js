@@ -2,6 +2,7 @@ var dead = false
 export var score = 0;
 import {DIRECTORY} from './directory.js'
 import axios from 'axios'
+import {getCookie} from '@/utils/utils.js'
 export class Game extends Phaser.Scene{
     constructor(){
         super({
@@ -84,16 +85,18 @@ function die(){
 function gameOver (game){
     // reset dead and launche try again menu
     dead = false;
-    try {
-        axios
-            .post(`http://127.0.0.1:3001/api/scores/`,{value:game.apples},{withCredentials: true})
-            .catch(err=>{
-                if(!err.status){
-                    console.log(err)
-                } 
-            })
-    } catch (error) {
-        console.log(error)
+    if(getCookie("jwt")){
+        try {
+            axios
+                .post(`http://127.0.0.1:3001/api/scores/`,{value:game.apples},{withCredentials: true})
+                .catch(err=>{
+                    if(!err.status){
+                        console.log(err)
+                    } 
+                })
+        } catch (error) {
+            console.log(error)
+        }
     }
     game.scene.pause()
     game.scene.bringToTop(DIRECTORY.SCENES.MENU)
