@@ -1,7 +1,7 @@
 <template>
     <v-container >
             <v-layout>
-                <v-flex>
+                <v-flex style="padding-top:10%">
                     <v-card dark>
                         <v-card-text>
                             <v-form @submit.prevent="signup" :dark="true">
@@ -98,8 +98,6 @@ export default{
                 console.log(e)
             }
         },
-        onLoadMeetup (id) {
-      }
     },
 }
 </script>

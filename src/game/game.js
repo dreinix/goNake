@@ -2,6 +2,7 @@ var dead = false
 export var score = 0;
 import {DIRECTORY} from './directory.js'
 import axios from 'axios'
+import {getCookie} from '@/utils/utils.js'
 export class Game extends Phaser.Scene{
     constructor(){
         super({
@@ -9,7 +10,7 @@ export class Game extends Phaser.Scene{
         })
     }
     init(){
-        //set everything to 0
+        // set everything to 0
         this.speed = 250;
         this.tail = [];
         this.apples = 0;
@@ -22,7 +23,7 @@ export class Game extends Phaser.Scene{
 
     }  
     create () {
-        //default world elements
+        // default world elements
         this.scoreText = this.add.text(10, 10, 'score: 0', { fontSize: '32px', fill: '#ffff' });
         this.cursors = this.input.keyboard.createCursorKeys();
         this.body = this.physics.add.group();
@@ -34,19 +35,19 @@ export class Game extends Phaser.Scene{
         
         this.snake.checkWorldBounds = true;
         
-        //variable elements
+        // variable elements
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'rapple') 
         this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
-        
-        //Interactions
+        this.gapple.setScale(0.3)
+        this.rapple.setScale(0.3)
+        // Interactions
         this.physics.add.overlap(this.snake, this.body.getChildren(),die, null, this);
         this.physics.add.overlap(this.snake, this.gapple, collectGreenApple, null, this);
         this.physics.add.overlap(this.snake, this.rapple, collectRedApple, null, this);
         this.physics.add.overlap(this.snake, this.walls, die, null, this);
         this.physics.add.overlap(this.body, this.walls, die, null, this);
     }
-    
-    
+     
     update(){  
         // handle direction change
         if (this.cursors.left.isDown & this.snake.body.velocity.x!=this.speed) {
@@ -62,14 +63,14 @@ export class Game extends Phaser.Scene{
             this.snake.body.setVelocityX(0);
             this.snake.body.setVelocityY(this.speed);
         }
-        //Create a "tail" efect
+        // Create a "tail" efect
         if(this.neck.getChildren().length>0){      
             Phaser.Actions.ShiftPosition(this.neck.getChildren(), this.snake.x, this.snake.y,1);
         }
         if(this.tail.length>0){
             Phaser.Actions.ShiftPosition(this.tail, this.neck.getChildren()[this.neck.getChildren().length-1].x, this.neck.getChildren()[this.neck.getChildren().length-1].y);
         }
-        //borders
+        // borders
         if(this.game.canvas.width-9==this.snake.x || this.snake.x ==9 || this.game.canvas.height-9==this.snake.y|| this.snake.y ==9 ){
             dead = true
         }
@@ -82,18 +83,20 @@ function die(){
     dead = true
 }
 function gameOver (game){
-    //reset dead and launche try again menu
+    // reset dead and launche try again menu
     dead = false;
-    try {
-        axios
-            .post(`http://127.0.0.1:3001/api/scores/`,{value:game.apples},{withCredentials: true})
-            .catch(err=>{
-                if(!err.status){
-                    console.log(err)
-                } 
-            })
-    } catch (error) {
-        console.log(error)
+    if(getCookie("jwt")){
+        try {
+            axios
+                .post(`http://127.0.0.1:3001/api/scores/`,{value:game.apples},{withCredentials: true})
+                .catch(err=>{
+                    if(!err.status){
+                        console.log(err)
+                    } 
+                })
+        } catch (error) {
+            console.log(error)
+        }
     }
     game.scene.pause()
     game.scene.bringToTop(DIRECTORY.SCENES.MENU)
@@ -138,6 +141,7 @@ function collectRedApple (snake,rapple)
     //
     if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
+        this.rapple.setScale(0.3)
         this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }  
 
@@ -151,13 +155,13 @@ function collectGreenApple (snake)
     this.gapple.disableBody(true, true);
     this.apples += 1;
     this.scoreText.setText('score: ' + this.apples);
-    this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'gapple')     
+    this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'gapple')  
+    this.gapple.setScale(0.3)   
     this.physics.add.overlap(snake, this.gapple, collectGreenApple, null, this);
     //
     //Add tail elements
     //
     this.tail = this.body.getChildren();
-    console.log((snake.width/this.speed)*100)
     if(this.neck.getChildren().length>(snake.width/this.speed)*100){ 
         this.body.create(
             this.neck.getChildren()[this.neck.getChildren().length-1].x, 
@@ -172,7 +176,10 @@ function collectGreenApple (snake)
     let vodd = Phaser.Math.Between(0,100)
     if(this.apples%10==0){
         this.walls = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'vWall')
-        vodd<50? this.walls.rotation= 1.575: this.walls.rotation=0
+        if(vodd<50){
+            this.walls.angle=90
+            this.walls.setSize(this.walls.height,this.walls.width)
+        }
         this.physics.add.overlap(this.snake, this.walls, die, null, this);
         this.physics.add.overlap(this.body, this.walls, die, null, this);
         this.speed+=this.speed*0.1
@@ -183,6 +190,7 @@ function collectGreenApple (snake)
     let odd = Phaser.Math.Between(0,100)
     if(odd<=15){
         this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-50),Phaser.Math.Between(50, this.game.canvas.height-50),'rapple') 
+        this.rapple.setScale(0.3)
         this.physics.add.overlap(snake, this.rapple, collectRedApple, null, this);
     }
 }

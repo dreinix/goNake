@@ -3,7 +3,11 @@
         <v-btn plain ripple @click="goTo('')">
             <v-toolbar-title>GoNake</v-toolbar-title>
         </v-btn>
+        <v-btn right plain @click="goTo('scores')">
+            Scores
+        </v-btn>
         <v-spacer></v-spacer>
+        
         <v-menu
             left
             bottom>
@@ -26,8 +30,7 @@
 
 
 <script>
-import {getCookie} from '@/utils/apiRequest.js'
-import {setCookie} from '@/utils/apiRequest.js'
+import {getCookie,setCookie} from '@/utils/utils.js'
 export default{
     data(){
         return{

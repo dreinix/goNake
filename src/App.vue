@@ -1,11 +1,12 @@
 <template>
-  <v-app :style="image" :dark="true">
-    <navigation />
-    <v-main>
+  <v-app :style="image"   :dark="true">      
+    <navigation />     
+    <v-main>       
       <router-view></router-view> 
-    </v-main>   
-  </v-app>
+    </v-main> 
+  </v-app>  
 </template>
+
 <script>
 import Landing from '@/components/landingPage/landing.vue'
 import navigation from '@/components/navbar/navbar.vue'
@@ -32,10 +33,13 @@ export default {
     Landing,
     navigation
   },
-  data(){
-    return {
-      image: { backgroundImage: `url(${require('@/assets/images/background.jpg')})` },
-    }
+  computed:{
+    image() {
+            return {
+              'background-image': `url(${require('@/assets/images/hexagon.gif')})`,
+              'position': 'relative',
+            }
+        }
   }
 }
 
