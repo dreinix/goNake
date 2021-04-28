@@ -157,7 +157,6 @@ function collectGreenApple (snake)
     //Add tail elements
     //
     this.tail = this.body.getChildren();
-    console.log((snake.width/this.speed)*100)
     if(this.neck.getChildren().length>(snake.width/this.speed)*100){ 
         this.body.create(
             this.neck.getChildren()[this.neck.getChildren().length-1].x, 
@@ -172,7 +171,10 @@ function collectGreenApple (snake)
     let vodd = Phaser.Math.Between(0,100)
     if(this.apples%10==0){
         this.walls = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'vWall')
-        vodd<50? this.walls.rotation= 1.575: this.walls.rotation=0
+        if(vodd<50){
+            this.walls.angle=90
+            this.walls.setSize(this.walls.height,this.walls.width)
+        }
         this.physics.add.overlap(this.snake, this.walls, die, null, this);
         this.physics.add.overlap(this.body, this.walls, die, null, this);
         this.speed+=this.speed*0.1

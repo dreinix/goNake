@@ -1,8 +1,8 @@
 <template>
     <v-container>
             <v-layout>
-                <v-flex>
-                    <v-card dark>
+                <v-flex style="padding-top:15%">
+                    <v-card dark >
                         <v-card-text>
                             <v-form @submit.prevent="login" :dark="true">
                                 <v-layout>
@@ -46,7 +46,7 @@
 
 <script>
 import axios from 'axios'
-import {setCookie} from '@/utils/apiRequest.js'
+import {setCookie} from '@/utils/utils.js'
 export default{
     data(){
         return{
@@ -57,13 +57,6 @@ export default{
             ans: {}
         }
     },
-    mounted(){
-        if(this.reload){
-            console.log("reloading")
-            this.reload = false
-            
-        }
-    },
     methods: {
         async login(){
             try {
@@ -71,7 +64,7 @@ export default{
                 .post(`http://127.0.0.1:3001/api/users/login`,{
                     username:this.usrn,
                     password:this.pwd})
-                .then(response =>  (console.log(response.data.Token),this.ans = response.data))
+                .then(response =>  (this.ans = response.data))
                 .catch(err=>{
                     console.log(err)
                     if(!err.status){
@@ -85,7 +78,7 @@ export default{
             if(this.ans.Token){
                 this.unvalid = false;
                 setCookie("jwt",this.ans.Token,5)
-                this.$router.go(-1)
+                this.$router.replace("/#logged")
             }else{
                 this.unvalid = true;
             }
