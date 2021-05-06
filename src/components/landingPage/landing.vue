@@ -1,6 +1,6 @@
 <template>
   <div class="landing">
-    <div id="content" >
+    <div id="content">
       <div id="leaderboard">
       <v-list subheader two-line dark
         dense max-width="80%">
@@ -24,7 +24,7 @@
             v-bind:initialize.prop='initialize'
           />
         </div>
-      <div/>    
+      <div/>   
     </div>
   </div>  
 </template>
@@ -33,9 +33,8 @@ import Phaser from "phaser";
 import {Game} from '@/game/game'
 import {Menu} from '@/game/scene/menu'
 import {Load} from '@/game/scene/load'
-import axios from 'axios'
 import moment from 'moment'
-
+import { getTopScores } from '@/utils/utils';
 export default {
   
   name: 'landing',
@@ -46,12 +45,11 @@ export default {
   },
   data() {
     return {
-      image: { backgroundImage: `url(${require('@/assets/images/background.jpg')})` },
       initialize: true,
       game: {
         type: Phaser.AUTO,
-        width: 800,
-        height: 600,
+        width: 1200,
+        height: 720,
         scene: [Load,Menu,Game],
         physics:{
           default: 'arcade',
@@ -63,6 +61,7 @@ export default {
         parent: "game"
       },
       scores:[],
+      userD: {},
     }
   },
   methods: {
@@ -75,18 +74,14 @@ export default {
       return moment(String(date)).add(4, 'hours').format('DD/MM/YYYY hh:mm a')
     }
   },
-  mounted(){  
-    try {
-      axios
-      .get(`http://127.0.0.1:3001/api/scores/top`)
-      .then(response => (this.info = response, console.log(response.data),this.scores=response.data))
-      .catch(err=>{
-        if(!err.status){
-          return "Server down"
-        } 
-      })
-    } catch (e) {
-      return e;
+  async mounted(){  
+    if(window.location.hash=="#logged") {
+      window.location = window.location + '/';
+      window.location.reload();
+    }
+    let response = await getTopScores();
+    if(response.data){
+      this.scores = response.data
     }
   }
 }

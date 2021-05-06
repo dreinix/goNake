@@ -1,8 +1,8 @@
 <template>
     <v-container>
             <v-layout>
-                <v-flex>
-                    <v-card dark>
+                <v-flex style="padding-top:15%">
+                    <v-card dark >
                         <v-card-text>
                             <v-form @submit.prevent="login" :dark="true">
                                 <v-layout>
@@ -45,8 +45,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {setCookie} from '@/utils/apiRequest.js'
+import {setCookie,loginUser} from '@/utils/utils.js'
 export default{
     data(){
         return{
@@ -54,38 +53,15 @@ export default{
             pwd: "",
             unvalid: false,
             reload:false,
-            ans: {}
-        }
-    },
-    mounted(){
-        if(this.reload){
-            console.log("reloading")
-            this.reload = false
-            
         }
     },
     methods: {
         async login(){
-            try {
-                await axios
-                .post(`http://127.0.0.1:3001/api/users/login`,{
-                    username:this.usrn,
-                    password:this.pwd})
-                .then(response =>  (console.log(response.data.Token),this.ans = response.data))
-                .catch(err=>{
-                    console.log(err)
-                    if(!err.status){
-                    return "Server down"
-                    } 
-                })
-            } catch (e) {
-                console.log(e)
-            }
-
-            if(this.ans.Token){
+            let response = await loginUser(this.usrn,this.pwd)
+            if(response.Token){
                 this.unvalid = false;
-                setCookie("jwt",this.ans.Token,5)
-                this.$router.go(-1)
+                setCookie("jwt",response.Token,5)
+                this.$router.replace("/#logged")
             }else{
                 this.unvalid = true;
             }

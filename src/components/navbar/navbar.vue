@@ -3,15 +3,20 @@
         <v-btn plain ripple @click="goTo('')">
             <v-toolbar-title>GoNake</v-toolbar-title>
         </v-btn>
+        <v-btn right plain @click="goTo('scores')">
+            Scores
+        </v-btn>
         <v-spacer></v-spacer>
+        
         <v-menu
             left
             bottom>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon
+                    <v-btn rounded
                         v-bind="attrs"
                         v-on="on">
-                            <v-icon>mdi-account</v-icon>
+                        
+                           {{username}} <v-icon>mdi-account</v-icon> 
                     </v-btn>
                 </template>
                 <v-list>
@@ -26,12 +31,12 @@
 
 
 <script>
-import {getCookie} from '@/utils/apiRequest.js'
-import {setCookie} from '@/utils/apiRequest.js'
+import {getCookie,setCookie,getCurrentUser} from '@/utils/utils.js'
 export default{
     data(){
         return{
         items:[],
+        username: "Login"
         }
     },     
     methods: {
@@ -51,13 +56,16 @@ export default{
         }
     },
     
-    mounted(){
+    async mounted(){
         var cookie = getCookie("jwt")
         if(!cookie){
+            
             this.items= [
                 { title: 'login' },
                 { title: 'signup' },]
         }else{
+            let response = await getCurrentUser();
+            this.username = response.data.username
             this.items= [
                 { title: 'logout' }]
         }

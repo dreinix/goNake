@@ -3,29 +3,26 @@
     padding-top: 1%;
 }
 #content{
-    /* background-color: blue; */
     display: flex;
     justify-content: space-between;
-    /* border: 3px solid green;  */
+    padding-top:2%
 }
 #leaderboard{
     height: 800px;
     width: auto ;
-    /* border: 3px solid green;  */
     text-align: left;
-    opacity: 0.70;
+    opacity: 0.95;
     overflow-y: auto;
 }
 #app{
-    /* background-color: rgb(10, 85, 79); */
     position: absolute;
     height: 100%;
     width: 100%;
+
 }
 #game{
     
     margin-left: center;
     height: auto;
     width: auto;
-    /* border: 3px solid green;  */
 }

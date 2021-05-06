@@ -5,13 +5,12 @@ import router from '@/router/index.js'
 Vue.config.productionTip = false;
 Vue.config.ignoredElements = [/ion-\w*/];
 import vuetify from '@/plugins/vuetify'
+import VueObserveVisibility from 'vue-observe-visibility'
 
 
 defineIonPhaser(window);
-router.beforeEach((to, from, next) => {
-  if (from.name === 'login') next(location.reload())
-  else next()
-})
+Vue.use(VueObserveVisibility)
+
 new Vue({
   el: '#app',
   vuetify,
