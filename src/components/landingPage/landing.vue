@@ -24,7 +24,7 @@
             v-bind:initialize.prop='initialize'
           />
         </div>
-      <div/>    
+      <div/>   
     </div>
   </div>  
 </template>
@@ -33,8 +33,8 @@ import Phaser from "phaser";
 import {Game} from '@/game/game'
 import {Menu} from '@/game/scene/menu'
 import {Load} from '@/game/scene/load'
-import axios from 'axios'
 import moment from 'moment'
+import { getTopScores } from '@/utils/utils';
 export default {
   
   name: 'landing',
@@ -61,6 +61,7 @@ export default {
         parent: "game"
       },
       scores:[],
+      userD: {},
     }
   },
   methods: {
@@ -73,22 +74,14 @@ export default {
       return moment(String(date)).add(4, 'hours').format('DD/MM/YYYY hh:mm a')
     }
   },
-  mounted(){  
+  async mounted(){  
     if(window.location.hash=="#logged") {
       window.location = window.location + '/';
       window.location.reload();
     }
-    try {
-      axios
-      .get(`http://127.0.0.1:3001/api/scores/top`)
-      .then(response => (this.info = response,this.scores=response.data))
-      .catch(err=>{
-        if(!err.status){
-          return "Server down"
-        } 
-      })
-    } catch (e) {
-      return e;
+    let response = await getTopScores();
+    if(response.data){
+      this.scores = response.data
     }
   }
 }

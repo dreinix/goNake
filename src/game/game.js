@@ -1,8 +1,7 @@
 var dead = false
 export var score = 0;
 import {DIRECTORY} from './directory.js'
-import axios from 'axios'
-import {getCookie} from '@/utils/utils.js'
+import { saveScore } from '@/utils/utils.js';
 export class Game extends Phaser.Scene{
     constructor(){
         super({
@@ -36,10 +35,8 @@ export class Game extends Phaser.Scene{
         this.snake.checkWorldBounds = true;
         
         // variable elements
-        this.rapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'rapple') 
         this.gapple = this.physics.add.sprite(Phaser.Math.Between(50, this.game.canvas.width-100),Phaser.Math.Between(50, this.game.canvas.height-100),'gapple')     
         this.gapple.setScale(0.3)
-        this.rapple.setScale(0.3)
         // Interactions
         this.physics.add.overlap(this.snake, this.body.getChildren(),die, null, this);
         this.physics.add.overlap(this.snake, this.gapple, collectGreenApple, null, this);
@@ -85,19 +82,7 @@ function die(){
 function gameOver (game){
     // reset dead and launche try again menu
     dead = false;
-    if(getCookie("jwt")){
-        try {
-            axios
-                .post(`http://127.0.0.1:3001/api/scores/`,{value:game.apples},{withCredentials: true})
-                .catch(err=>{
-                    if(!err.status){
-                        console.log(err)
-                    } 
-                })
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    saveScore(game.apples)
     game.scene.pause()
     game.scene.bringToTop(DIRECTORY.SCENES.MENU)
     game.scene.launch(DIRECTORY.SCENES.MENU,"died")

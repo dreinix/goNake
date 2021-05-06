@@ -12,10 +12,11 @@
             left
             bottom>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon
+                    <v-btn rounded
                         v-bind="attrs"
                         v-on="on">
-                            <v-icon>mdi-account</v-icon>
+                        
+                           {{username}} <v-icon>mdi-account</v-icon> 
                     </v-btn>
                 </template>
                 <v-list>
@@ -30,11 +31,12 @@
 
 
 <script>
-import {getCookie,setCookie} from '@/utils/utils.js'
+import {getCookie,setCookie,getCurrentUser} from '@/utils/utils.js'
 export default{
     data(){
         return{
         items:[],
+        username: "Login"
         }
     },     
     methods: {
@@ -54,13 +56,16 @@ export default{
         }
     },
     
-    mounted(){
+    async mounted(){
         var cookie = getCookie("jwt")
         if(!cookie){
+            
             this.items= [
                 { title: 'login' },
                 { title: 'signup' },]
         }else{
+            let response = await getCurrentUser();
+            this.username = response.data.username
             this.items= [
                 { title: 'logout' }]
         }

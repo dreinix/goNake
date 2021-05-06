@@ -45,8 +45,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {setCookie} from '@/utils/utils.js'
+import {setCookie,loginUser} from '@/utils/utils.js'
 export default{
     data(){
         return{
@@ -54,30 +53,14 @@ export default{
             pwd: "",
             unvalid: false,
             reload:false,
-            ans: {}
         }
     },
     methods: {
         async login(){
-            try {
-                await axios
-                .post(`http://127.0.0.1:3001/api/users/login`,{
-                    username:this.usrn,
-                    password:this.pwd})
-                .then(response =>  (this.ans = response.data))
-                .catch(err=>{
-                    console.log(err)
-                    if(!err.status){
-                    return "Server down"
-                    } 
-                })
-            } catch (e) {
-                console.log(e)
-            }
-
-            if(this.ans.Token){
+            let response = await loginUser(this.usrn,this.pwd)
+            if(response.Token){
                 this.unvalid = false;
-                setCookie("jwt",this.ans.Token,5)
+                setCookie("jwt",response.Token,5)
                 this.$router.replace("/#logged")
             }else{
                 this.unvalid = true;

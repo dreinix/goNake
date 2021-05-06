@@ -11,9 +11,8 @@
 import Landing from '@/components/landingPage/landing.vue'
 import navigation from '@/components/navbar/navbar.vue'
 import "@/components/landingPage/landing.css";
-import axios from 'axios'
 import Cookies from "js-cookie";
-
+import axios from 'axios'
 
 axios.defaults.withCredentials = true
 axios.interceptors.request.use(
@@ -36,7 +35,7 @@ export default {
   computed:{
     image() {
             return {
-              'background-image': `url(${require('@/assets/images/hexagon.gif')})`,
+              'background-color': '#263238',
               'position': 'relative',
             }
         }
