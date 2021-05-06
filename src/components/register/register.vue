@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     conparePwd() {
-      return this.pwd == this.pwdc ? "" : "Las contraseñas no son iguales";
+      return this.pwd == this.pwdc ? true : "Las contraseñas no son iguales";
     },
   },
   methods: {
